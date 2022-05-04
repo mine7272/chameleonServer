@@ -25,4 +25,4 @@ def upload_file():
         return '파일 업로드 성공!'
 
 if __name__ == '__main__': 
-    app.run(host='0.0.0.0', port=5000,debug=True)
+    app.run(host='0.0.0.0', port=5000)
