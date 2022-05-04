@@ -8,14 +8,9 @@ app = Flask(__name__)
 CORS(app)
 app.config['UPLOAD_FOLDER'] = '/'
 
-api = Api(app, version='1.0', title='chameleon ios api', description='Swagger 문서', doc="/api-docs")
-ns = api.namespace('test', description='조회 API')
-
-
-@ns.route('/')
-class Test(Resource): 
-    def get(self): 
-        return 'Hello World!'
+@app.route('/')
+def home():
+    return 'test'
 
 @app.route('/fileupload', methods = ['GET', 'POST'])
 def upload_file():
