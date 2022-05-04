@@ -8,11 +8,11 @@ app = Flask(__name__)
 CORS(app)
 app.config['UPLOAD_FOLDER'] = '/'
 
-@app.route('/')
+@app.route('/server-test')
 def home():
     return jsonify({"result": "ok"})
 
-@app.route('/fileupload', methods = ['GET', 'POST'])
+@app.route('/file/upload', methods = ['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         f = request.files['file']
