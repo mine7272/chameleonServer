@@ -2,7 +2,6 @@ import os
 from flask import Flask, request
 from flask_cors import CORS
 from flask_restx import Api, Resource, reqparse
-from flask_mysqldb import MySQL
 from werkzeug.utils import secure_filename
 
 from dotenv import load_dotenv
