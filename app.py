@@ -4,8 +4,6 @@ from flask_cors import CORS
 from flask_restx import Api, Resource, reqparse
 from werkzeug.utils import secure_filename
 
-from dotenv import load_dotenv
-
 app = Flask(__name__)
 CORS(app)
 app.config['UPLOAD_FOLDER'] = '/'
