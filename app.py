@@ -29,7 +29,7 @@ def upload_file():
     
 @app.route('/test', methods = ['POST'])
 def upload_test():
-    jsonData=request.args.get('message')
+    jsonData=request.form.get('message')
     print(jsonData)
     return {
         "result": "ok",
