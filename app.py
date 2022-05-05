@@ -1,6 +1,6 @@
 import os
 from urllib import response
-from flask import Flask, request, jsonify, json,flash,url_for,redirect
+from flask import Flask, request, jsonify, json
 from flask_cors import CORS
 from flask_restx import Api, Resource, reqparse
 from werkzeug.utils import secure_filename
@@ -21,8 +21,7 @@ def home():
 @app.route('/file/upload', methods = ['GET', 'POST'])
 def upload_file():
     if 'file' not in request.files:
-            flash('no file part')
-            return redirect(request.url)
+            return jsonify({"result": "upload fail"})
     f = request.files['file']
     f.save(secure_filename(f.filename))
     return jsonify({"result": "upload success"})
