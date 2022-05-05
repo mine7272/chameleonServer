@@ -15,7 +15,7 @@ def home():
 @app.route('/file/upload', methods = ['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        f = request.files['file']
+        f = request.files['']
         f.save(secure_filename(f.filename))
         return jsonify({"result": "upload success"})
     else :
