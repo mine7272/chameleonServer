@@ -22,7 +22,7 @@ def upload_file():
     if 'file' not in request.files:
             return jsonify({"result": "fail"})
     f = request.files['file']
-    onlynum="__"+request.headers.get('file')+"__"
+    onlynum="__"+request.headers.get('authorization')+"__"
     os.makedirs("../database/"+onlynum)
     f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
     crop_list(onlynum)
