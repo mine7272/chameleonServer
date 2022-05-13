@@ -7,7 +7,7 @@ from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 CORS(app)
-app.config['UPLOAD_FOLDER'] = '/'
+app.config['UPLOAD_FOLDER'] = '../database'
 
 @app.errorhandler(404)
 def page_not_found(error):
@@ -22,8 +22,14 @@ def upload_file():
     if 'file' not in request.files:
             return jsonify({"result": "fail"})
     f = request.files['file']
-    f.save(secure_filename(f.filename))
-    return jsonify({"result": "ok"})
+    header=request.headers.get('file')
+    os.makedirs("../database/"+request.headers.get('file'))
+    f.save("../database/{}/".format(request.headers.get('file')) +secure_filename(f.filename))
+    crop_list(header)
+    return jsonify({"result":"ok"})
+
+def crop_list(header):
+    os.system('python src/classifier.py --type photo --key {}'.format(header))
      
 @app.route('/version', methods = ['GET'])
 def version():
