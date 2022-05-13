@@ -9,10 +9,9 @@ app = Flask(__name__)
 CORS(app)
 app.config['UPLOAD_FOLDER'] = '/'
 
-api =Api(app, version='1.0', title='API 문서', description='Swagger 문서', doc="/api-docs")
-test_api = api.namespace('test', description='조회 API')
-
-
+@app.errorhandler(404)
+def page_not_found(error):
+     return jsonify({"result": "fail"}), 404
 
 @app.route('/server-test')
 def home():
@@ -21,23 +20,18 @@ def home():
 @app.route('/file/upload', methods = ['GET', 'POST'])
 def upload_file():
     if 'file' not in request.files:
-            return jsonify({"result": "upload fail"})
+            return jsonify({"result": "fail"})
     f = request.files['file']
     f.save(secure_filename(f.filename))
-    return jsonify({"result": "upload success"})
-
-    #else :
-    #   return jsonify({"result": "upload fail"})
-    
-@app.route('/test', methods = ['POST'])
-def upload_test():
-    jsonData=request.form.get('message')
-    print(jsonData)
-    return {
+    return jsonify({"result": "ok"})
+     
+@app.route('/version', methods = ['GET'])
+def version():
+    return jsonify({
         "result": "ok",
-        "message": "request"
-    }
+        "message": "0.0.1"
+    })
     
 
 if __name__ == '__main__': 
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000,debug=1)
