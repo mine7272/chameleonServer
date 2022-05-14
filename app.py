@@ -25,12 +25,8 @@ def upload_file():
     onlynum="__"+request.headers.get('authorization')+"__"
     os.makedirs("../database/"+onlynum)
     f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
-    crop_list(onlynum)
+    os.system('python src/classifier.py --type photo --key {}'.format(onlynum))
     return jsonify({"result":"ok"})
-
-def crop_list(onlynum):
-    os.system("echo test")
-    os.system('python src/classifier.py --type photo --key {}'.format(request.headers.get('authorization')))
      
 @app.route('/version', methods = ['GET'])
 def version():
