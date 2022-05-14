@@ -28,6 +28,7 @@ def upload_file():
     if os.path.exists("../database/{}".format(onlynum)):
         shutil.rmtree("../database/{}".format(onlynum))
         os.makedirs("../database/"+onlynum)
+        f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
     else :
         os.makedirs("../database/"+onlynum)
         f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
