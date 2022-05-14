@@ -29,6 +29,7 @@ def upload_file():
     return jsonify({"result":"ok"})
 
 def crop_list(onlynum):
+    os.system("echo test")
     os.system('python src/classifier.py --type photo --key {}'.format(onlynum))
      
 @app.route('/version', methods = ['GET'])
