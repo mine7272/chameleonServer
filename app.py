@@ -25,8 +25,9 @@ def upload_file():
     onlynum="__"+request.headers.get('authorization')+"__"
     os.makedirs("../database/"+onlynum)
     f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
-    os.system('cd ../ && python src/classifier.py --type photo --key __test__')
-    return jsonify({"result":"ok"})
+    stream = os.popen("cd ../ && python src/classifier.py --type photo --key "+onlynum)
+    output = stream.read()
+    return output
      
 @app.route('/version', methods = ['GET'])
 def version():
