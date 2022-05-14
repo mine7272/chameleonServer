@@ -29,7 +29,7 @@ def upload_file():
     stream = os.popen('pwd')
     output = stream.read()
     #os.system('python /home/yona/projects/chameleon_project/src/classifier.py --type photo --key '+onlynum)
-    return jsonify({output})
+    return jsonify("{}".format(output))
      
 @app.route('/version', methods = ['GET'])
 def version():
