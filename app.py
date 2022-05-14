@@ -26,7 +26,8 @@ def upload_file():
     onlynum=request.headers.get('authorization')
     os.makedirs("../database/"+onlynum)
     f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
-    subprocess.run("cd ../ && python src/classifier.py --type photo --key "+onlynum, shell=True)
+    #subprocess.run("cd ../ && python src/classifier.py --type photo --key "+onlynum, shell=True)
+    os.system("cd ../ && python src/classifier.py --type photo --key "+onlynum)
     return jsonify({"result":"ok"})
      
 @app.route('/version', methods = ['GET'])
