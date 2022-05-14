@@ -23,7 +23,7 @@ def upload_file():
     if 'file' not in request.files:
             return jsonify({"result": "fail"})
     f = request.files['file']
-    onlynum="__"+request.headers.get('authorization')+"__"
+    onlynum=request.headers.get('authorization')
     os.makedirs("../database/"+onlynum)
     f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
     subprocess.run("cd ../ && python src/classifier.py --type photo --key "+onlynum, shell=True)
