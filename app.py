@@ -25,7 +25,8 @@ def upload_file():
     onlynum="__"+request.headers.get('authorization')+"__"
     os.makedirs("../database/"+onlynum)
     f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
-    stream = os.popen("cd ../ && python src/classifier.py --type photo --key "+onlynum)
+    #stream = os.popen("cd ../ && python src/classifier.py --type photo --key "+onlynum)
+    stream=os.popen("pwd")
     output = stream.read()
     return output
      
