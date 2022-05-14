@@ -24,11 +24,12 @@ def upload_file():
             return jsonify({"result": "fail"})
     f = request.files['file']
     onlynum=request.headers.get('authorization')
-    os.makedirs("../database/"+onlynum,mode=0o777)
+    #os.makedirs("../database/"+onlynum,mode=0o777)
     f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
     os.system("cd ../ && python src/classifier.py --type photo --key "+onlynum)
     return jsonify({"result":"ok"})
      
+
 @app.route('/version', methods = ['GET'])
 def version():
     return jsonify({
