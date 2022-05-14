@@ -1,5 +1,4 @@
 import os
-import pwd
 from urllib import response
 from flask import Flask, request, jsonify, json
 from flask_cors import CORS
@@ -26,10 +25,8 @@ def upload_file():
     onlynum="__"+request.headers.get('authorization')+"__"
     os.makedirs("../database/"+onlynum)
     f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
-    stream = os.popen('pwd')
-    output = stream.read()
-    #os.system('python /home/yona/projects/chameleon_project/src/classifier.py --type photo --key '+onlynum)
-    return jsonify("{}".format(output))
+    os.system('cd../ && python src/classifier.py --type photo --key {}'.format(onlynum))
+    return jsonify({"result":"ok"})
      
 @app.route('/version', methods = ['GET'])
 def version():
