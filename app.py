@@ -25,7 +25,7 @@ def upload_file():
     onlynum="__"+request.headers.get('authorization')+"__"
     os.makedirs("../database/"+onlynum)
     f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
-    os.system('python src/classifier.py --type photo --key '+onlynum)
+    os.system('python /home/yona/projects/chameleon_project/src/classifier.py --type photo --key '+onlynum)
     return jsonify({"result":"ok"})
      
 @app.route('/version', methods = ['GET'])
