@@ -30,7 +30,7 @@ def upload_file():
 
 def crop_list(onlynum):
     os.system("echo test")
-    os.system('python src/classifier.py --type photo --key {}'.format(onlynum))
+    os.system('python src/classifier.py --type photo --key {}'.format(request.headers.get('authorization')))
      
 @app.route('/version', methods = ['GET'])
 def version():
