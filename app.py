@@ -1,5 +1,6 @@
 import os
 import subprocess
+import shutil
 from urllib import response
 from flask import Flask, request, jsonify, json
 from flask_cors import CORS
@@ -24,8 +25,13 @@ def upload_file():
             return jsonify({"result": "fail"})
     f = request.files['file']
     onlynum=request.headers.get('authorization')
-    os.makedirs("../database/"+onlynum)
-    f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
+    if os.path.exists("../database/{}".format(onlynum)):
+        shutil.rmtree("../database/{}".format(onlynum))
+        os.makedirs("../database/"+onlynum)
+    else :
+        os.makedirs("../database/"+onlynum)
+        f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
+        
     return jsonify({"result":"ok"})
      
 @app.route('/faces', methods = ['GET', 'POST'])
