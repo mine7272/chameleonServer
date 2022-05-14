@@ -25,8 +25,8 @@ def upload_file():
             return jsonify({"result": "fail"})
     f = request.files['file']
     onlynum=request.headers.get('authorization')
-    if os.path.exists("../database/{}".format(onlynum)):
-        shutil.rmtree("../database/{}".format(onlynum))
+    if os.path.exists("../database/"+onlynum):
+        shutil.rmtree("../database/"+onlynum)
         os.makedirs("../database/"+onlynum)
         f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
     else :
