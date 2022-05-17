@@ -1,5 +1,6 @@
 import os,sys
 import shutil
+import subprocess
 from urllib import response
 from flask import Flask, request, jsonify, json
 from flask_cors import CORS
@@ -27,7 +28,7 @@ def upload_file():
     if os.path.exists("../database/"+onlynum):
         shutil.rmtree("../database/"+onlynum)
         os.makedirs("../database/"+onlynum)
-        f.save("../database/{}/"+onlynum +secure_filename(f.filename))
+        f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
     else :
         os.makedirs("../database/"+onlynum)
         f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
@@ -39,10 +40,7 @@ def faces():
     if request.method == 'GET':
         onlynum=request.headers.get('authorization')
         os.system("cd ../ && python src/classifier.py --type photo --key "+onlynum)
-        os.system("cd database/{}/tmp/LQ_faces && cp * ../../../../chameleonServer/static/img".format(onlynum))
-        
-        base_path = "/home/yona/chameleon_project/chameleonServer/static/img"
-        files = os.listdir(base_path)
+        files = os.listdir("static/0517test/LQ_faces")
         json_files = [{'filename': files}]
     return response(json.dumps(json_files),  mimetype='application/json')
         
