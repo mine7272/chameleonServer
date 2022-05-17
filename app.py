@@ -40,9 +40,9 @@ def faces():
     if request.method == 'GET':
         onlynum=request.headers.get('authorization')
         os.system("cd ../ && python src/classifier.py --type photo --key "+onlynum)
-        files = os.listdir("static/0517test/LQ_faces")
-        json_files = [{'filename': files}]
-    return response(json.dumps(json_files),  mimetype='application/json')
+        files = os.listdir("static/{}/LQ_faces".format(onlynum))
+        #json_files = [{"result":"ok","message":"추출 얼굴 이미지","data":files}]
+    return jsonify(json_files)
         
 @app.route('/version', methods = ['GET'])
 def version():
