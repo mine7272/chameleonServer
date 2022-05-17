@@ -1,5 +1,4 @@
-import os
-import subprocess
+import os,sys
 import shutil
 from urllib import response
 from flask import Flask, request, jsonify, json
@@ -28,7 +27,7 @@ def upload_file():
     if os.path.exists("../database/"+onlynum):
         shutil.rmtree("../database/"+onlynum)
         os.makedirs("../database/"+onlynum)
-        f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
+        f.save("../database/{}/"+onlynum +secure_filename(f.filename))
     else :
         os.makedirs("../database/"+onlynum)
         f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
@@ -40,8 +39,8 @@ def faces():
     if request.method == 'GET':
         onlynum=request.headers.get('authorization')
         os.system("cd ../ && python src/classifier.py --type photo --key "+onlynum)
+        os.system("cd database/{}/tmp/HQ && cp * ../../../../chameleonServer/static/img".format(onlynum))
 
-     
 @app.route('/version', methods = ['GET'])
 def version():
     return jsonify({
