@@ -39,7 +39,7 @@ def faces():
     if request.method == 'GET':
         onlynum=request.headers.get('authorization')
         os.system("cd ../ && python src/classifier.py --type photo --key "+onlynum)
-        os.system("cd ../database/{}/tmp/LQ_faces && cp * ../../../../chameleonServer/static/img".format(onlynum))
+        os.system("cd database/{}/tmp/LQ_faces && cp * ../../../../chameleonServer/static/img".format(onlynum))
         
         base_path = "/home/yona/chameleon_project/chameleonServer/static/img"
         files = os.listdir(base_path)
