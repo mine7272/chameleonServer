@@ -3,6 +3,7 @@ import shutil
 import subprocess
 from urllib import response
 from flask import Flask, request, jsonify, json
+from collections import OrderedDict
 from flask_cors import CORS
 from flask_restx import Api, Resource, reqparse
 from werkzeug.utils import secure_filename
@@ -41,9 +42,40 @@ def faces():
         onlynum=request.headers.get('authorization')
         os.system("cd ../ && python src/classifier.py --type photo --key "+onlynum)
         files = os.listdir("static/{}/LQ_faces".format(onlynum))
-        #json_files = [{"result":"ok","message":"추출 얼굴 이미지","data":files}]
-    return jsonify(json_files)
         
+        savedjson=open("static/{}/return1-{}.json".format(onlynum,onlynum))
+        savedjson_dict=json.load(savedjson)
+        data=savedjson_dict.get("data")
+        #json에 줄 data 배열 가공
+        for x in range(len(data)):
+            data[x]["url"]="http://118.91.7.160/"+data[x]['img'][16:]
+            data[x].pop("img")
+            data[x]["gender"]="gender_test"
+            data[x]["percent"]="percent_test"
+        face_json=OrderedDict()
+        
+        face_json["result"]="ok"
+        face_json["message"]="추출 얼굴 이미지"
+        face_json["data"]=data
+        
+        return (json.dumps(face_json,ensure_ascii=False,indent="\t"))
+    
+    if request.method == 'POST':
+        onlynum=request.headers.get('authorization')
+        faceindex = request.get_json()
+        mode=faceindex.pop("mode")
+        with open('../database/{}/choice_{}.json'.format(onlynum,onlynum), 'w') as outfile:
+           json.dump(faceindex, outfile, indent=4)
+        if mode == 0 :
+            os.system("cd ../ && python src/swapper.py --type photo --key "+onlynum)
+        elif mode == 1 :
+            os.system("cd ../ && python src/swapper.py --type photo --key {} --opt mosaic".format(onlynum))
+        elif mode == 2 :
+            os.system("cd ../ && python src/swapper.py --type photo --key {} --opt swap_mosaic".format(onlynum))
+        
+    return (faceindex)
+        
+
 @app.route('/version', methods = ['GET'])
 def version():
     return jsonify({
