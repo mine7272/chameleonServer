@@ -34,7 +34,9 @@ def upload_file():
     else :
         os.makedirs("../database/"+onlynum)
         f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
-        
+    
+    os.system("cd ../ && python src/classifier.py --type photo --key "+onlynum)
+
     return jsonify({"result":"ok"})
 
 @app.route('/file/download', methods = ['GET'])
@@ -53,11 +55,19 @@ def download_file():
     
     return (json.dumps(download_json,ensure_ascii=False,indent="\t"))
 
+@app.route('/file/delete', methods = ['POST'])
+def delete_file():
+    onlynum=request.headers.get('authorization')
+    shutil.rmtree("../database/"+onlynum)
+    shutil.rmtree("static/"+onlynum)
+    
+    return (jsonify({"result":"ok"}))
+
 @app.route('/faces', methods = ['GET', 'POST'])
+
 def faces():
     if request.method == 'GET':
         onlynum=request.headers.get('authorization')
-        os.system("cd ../ && python src/classifier.py --type photo --key "+onlynum)
         files = os.listdir("static/{}/LQ_faces".format(onlynum))
         
         savedjson=open("static/{}/return1-{}.json".format(onlynum,onlynum))
@@ -67,13 +77,14 @@ def faces():
         #json에 줄 data 배열 가공
         for x in range(0,len(data)):
             data[x]["url"]="http://118.91.7.160/"+data[x]['img'][16:]
+            data[x]["name"]=data[x]['img'][-7:]
             data[x].pop("img")
             data[x]["gender"]="gender_test"
-            data[x]["percent"]="percent_test"
-        
+            data[x]["percent"]=0
+    
         face_json=OrderedDict()
         face_json["result"]="ok"
-        face_json["message"]="추출 얼굴 이미지"
+        face_json["message"]="complete"
         face_json["data"]=data
         
         return (json.dumps(face_json,ensure_ascii=False,indent="\t"))
@@ -90,9 +101,8 @@ def faces():
         #    os.system("cd ../ && python src/swapper.py --type photo --key {} --opt mosaic".format(onlynum))
         #elif mode == 2 :
         #    os.system("cd ../ && python src/swapper.py --type photo --key {} --opt swap_mosaic".format(onlynum))
-        
-    return (faceindex)
-        
+    return jsonify({"result":"ok"})
+
 
 @app.route('/version', methods = ['GET'])
 def version():
