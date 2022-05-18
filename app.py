@@ -1,3 +1,4 @@
+from glob import glob
 import os,sys
 import shutil
 import subprocess
@@ -35,7 +36,23 @@ def upload_file():
         f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
         
     return jsonify({"result":"ok"})
-     
+
+@app.route('/file/download', methods = ['GET'])
+def download_file():
+    
+    onlynum=request.headers.get('authorization')
+    
+    file_list = os.listdir("static/{}/".format(onlynum))
+    download_list = [file for file in file_list if file.endswith(".jpg") or file.endswith(".mp4") or file.endswith(".png")]
+    
+    download_json=OrderedDict()
+    download_json["result"]="ok"
+    download_json["message"]="파일 다운로드"
+    download_json["data"]="static/{}/{}".format(onlynum,download_list)
+    
+    
+    return (json.dumps(download_json,ensure_ascii=False,indent="\t"))
+
 @app.route('/faces', methods = ['GET', 'POST'])
 def faces():
     if request.method == 'GET':
