@@ -48,7 +48,7 @@ def download_file():
     download_json=OrderedDict()
     download_json["result"]="ok"
     download_json["message"]="파일 다운로드"
-    download_json["data"]="static/{}/{}".format(onlynum,download_list)
+    download_json["data"]="http://118.91.7.160/static/{}/{}".format(onlynum,download_list[0])
     
     
     return (json.dumps(download_json,ensure_ascii=False,indent="\t"))
