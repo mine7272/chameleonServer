@@ -46,14 +46,15 @@ def faces():
         savedjson=open("static/{}/return1-{}.json".format(onlynum,onlynum))
         savedjson_dict=json.load(savedjson)
         data=savedjson_dict.get("data")
+
         #json에 줄 data 배열 가공
-        for x in range(len(data)):
+        for x in range(0,len(data)):
             data[x]["url"]="http://118.91.7.160/"+data[x]['img'][16:]
             data[x].pop("img")
             data[x]["gender"]="gender_test"
             data[x]["percent"]="percent_test"
-        face_json=OrderedDict()
         
+        face_json=OrderedDict()
         face_json["result"]="ok"
         face_json["message"]="추출 얼굴 이미지"
         face_json["data"]=data
@@ -64,14 +65,14 @@ def faces():
         onlynum=request.headers.get('authorization')
         faceindex = request.get_json()
         mode=faceindex.pop("mode")
-        with open('../database/{}/choice_{}.json'.format(onlynum,onlynum), 'w') as outfile:
+        with open('static/{}/choice_{}.json'.format(onlynum,onlynum), 'w') as outfile:
            json.dump(faceindex, outfile, indent=4)
-        if mode == 0 :
-            os.system("cd ../ && python src/swapper.py --type photo --key "+onlynum)
-        elif mode == 1 :
-            os.system("cd ../ && python src/swapper.py --type photo --key {} --opt mosaic".format(onlynum))
-        elif mode == 2 :
-            os.system("cd ../ && python src/swapper.py --type photo --key {} --opt swap_mosaic".format(onlynum))
+        #if mode == 0 :
+        os.system("cd ../ && python src/swapper.py --type photo --key "+onlynum)
+        #elif mode == 1 :
+        #    os.system("cd ../ && python src/swapper.py --type photo --key {} --opt mosaic".format(onlynum))
+        #elif mode == 2 :
+        #    os.system("cd ../ && python src/swapper.py --type photo --key {} --opt swap_mosaic".format(onlynum))
         
     return (faceindex)
         
