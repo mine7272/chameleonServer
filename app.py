@@ -3,6 +3,8 @@ import os,sys
 import shutil
 import subprocess
 from urllib import response
+from time import sleep
+from concurrent.futures import ThreadPoolExecutor
 from flask import Flask, request, jsonify, json
 from collections import OrderedDict
 from flask_cors import CORS
@@ -34,8 +36,6 @@ def upload_file():
     else :
         os.makedirs("../database/"+onlynum)
         f.save("../database/{}/".format(onlynum) +secure_filename(f.filename))
-    
-    os.system("cd ../ && python src/classifier.py --type photo --key "+onlynum)
 
     return jsonify({"result":"ok"})
 
@@ -58,16 +58,20 @@ def download_file():
 @app.route('/file/delete', methods = ['POST'])
 def delete_file():
     onlynum=request.headers.get('authorization')
-    shutil.rmtree("../database/"+onlynum)
-    shutil.rmtree("static/"+onlynum)
+    if os.path.exists("../database/"+onlynum):
+        shutil.rmtree("../database/"+onlynum)
+        shutil.rmtree("static/"+onlynum)
     
     return (jsonify({"result":"ok"}))
 
 @app.route('/faces', methods = ['GET', 'POST'])
 
 def faces():
+    executor.submit(crop_task)
+
     if request.method == 'GET':
         onlynum=request.headers.get('authorization')
+        #if os.path.exists("static/{}/LQ_faces".format(onlynum)):
         files = os.listdir("static/{}/LQ_faces".format(onlynum))
         
         savedjson=open("static/{}/return1-{}.json".format(onlynum,onlynum))
@@ -102,6 +106,10 @@ def faces():
         #elif mode == 2 :
         #    os.system("cd ../ && python src/swapper.py --type photo --key {} --opt swap_mosaic".format(onlynum))
     return jsonify({"result":"ok"})
+
+def crop_task():
+    os.system("cd ../ && python src/classifier.py --type photo --key "+onlynum)
+    return jsonify({"result" : "ok","message" : "in progress"})
 
 
 @app.route('/version', methods = ['GET'])
