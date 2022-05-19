@@ -11,6 +11,8 @@ from flask_cors import CORS
 from flask_restx import Api, Resource, reqparse
 from werkzeug.utils import secure_filename
 
+executor = ThreadPoolExecutor(2)
+
 app = Flask(__name__)
 CORS(app)
 app.config['UPLOAD_FOLDER'] = '../database'
@@ -67,11 +69,12 @@ def delete_file():
 @app.route('/faces', methods = ['GET', 'POST'])
 
 def faces():
-    executor.submit(crop_task)
-
     if request.method == 'GET':
         onlynum=request.headers.get('authorization')
-        #if os.path.exists("static/{}/LQ_faces".format(onlynum)):
+        executor.submit(inprogress)
+        os.system("cd ../ && python src/classifier.py --type photo --key "+onlynum)
+        if not os.path.exists("static/{}/LQ_faces".format(onlynum)):
+            return ("fail")
         files = os.listdir("static/{}/LQ_faces".format(onlynum))
         
         savedjson=open("static/{}/return1-{}.json".format(onlynum,onlynum))
@@ -107,8 +110,7 @@ def faces():
         #    os.system("cd ../ && python src/swapper.py --type photo --key {} --opt swap_mosaic".format(onlynum))
     return jsonify({"result":"ok"})
 
-def crop_task():
-    os.system("cd ../ && python src/classifier.py --type photo --key "+onlynum)
+def inprogress():
     return jsonify({"result" : "ok","message" : "in progress"})
 
 
